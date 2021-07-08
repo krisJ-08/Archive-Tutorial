@@ -3,28 +3,38 @@ package com.bawp.archive.adapter;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bawp.archive.R;
 import com.bawp.archive.model.Task;
+import com.bawp.archive.model.TaskViewModel;
 import com.bawp.archive.util.Utils;
 import com.google.android.material.chip.Chip;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    private final List<Task> taskList;
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> implements Filterable{
+    private static List<Task> taskList;
     private final OnTodoClickListener todoClickListener;
+    private List<Task> tasklistfull;
 
     public RecyclerViewAdapter(List<Task> taskList, OnTodoClickListener onTodoClickListener) {
         this.taskList = taskList;
         this.todoClickListener = onTodoClickListener;
+        this.tasklistfull = new ArrayList<>(taskList);
     }
 
 
@@ -62,9 +72,44 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public int getItemCount() {
-        return taskList.size();
+    public int getItemCount() { return taskList.size(); }
+
+    @Override
+    public Filter getFilter() {
+        return myFilter;
     }
+
+    private Filter myFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Task> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(tasklistfull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Task item : tasklistfull) {
+                    if (item.getTask().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            taskList.clear();
+            taskList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public AppCompatRadioButton radioButton;
@@ -72,7 +117,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public Chip todayChip;
 
         OnTodoClickListener onTodoClickListener;
-
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,7 +127,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             itemView.setOnClickListener(this);
             radioButton.setOnClickListener(this);
-
         }
 
         @Override
@@ -97,5 +140,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 onTodoClickListener.onTodoRadioButtonClick(currTask);
             }
         }
+
     }
 }
