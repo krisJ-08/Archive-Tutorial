@@ -9,15 +9,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
 import com.bawp.archive.roomdatabase.UserDao;
 import com.bawp.archive.roomdatabase.UserEntity;
 import com.bawp.archive.util.TaskRoomDatabase;
+
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     EditText userId, password, name;
     Button register;
     Button login;
+
+    public String bcryptHashUser;
+    public String bcryptHashPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +40,17 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Creating User Entity
                 UserEntity userEntity = new UserEntity();
-                userEntity.setUserId(userId.getText().toString());
-                userEntity.setPassword(password.getText().toString());
-                userEntity.setName(name.getText().toString());
-                System.out.println(userEntity);
+                String hashUser = userId.getText().toString();
+                String hashPass = password.getText().toString();
+                String hashName = name.getText().toString();
+
+                bcryptHashUser = BCrypt.withDefaults().hashToString(12, hashUser.toCharArray());
+                bcryptHashPass = BCrypt.withDefaults().hashToString(12, hashPass.toCharArray());
+                String bcryptHashName = BCrypt.withDefaults().hashToString(12, hashName.toCharArray());
+
+                userEntity.setUserId(bcryptHashUser);
+                userEntity.setPassword(bcryptHashPass);
+                userEntity.setName(bcryptHashName);
                 if (validateInput(userEntity)){
                     //Do insert operation
                     TaskRoomDatabase userDatabase = TaskRoomDatabase.getDatabase(getApplicationContext());

@@ -12,11 +12,19 @@ import android.widget.Toast;
 import com.bawp.archive.roomdatabase.UserDao;
 import com.bawp.archive.roomdatabase.UserEntity;
 import com.bawp.archive.util.TaskRoomDatabase;
+import com.bawp.archive.RegistrationActivity;
+
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class LoginActivity extends AppCompatActivity {
+    RegistrationActivity regi;
 
     EditText userId, password;
     Button login;
+    private String userIdText;
+    private String passwordText;
+    private String pass = null;
+    private String user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,23 +33,34 @@ public class LoginActivity extends AppCompatActivity {
         userId = findViewById(R.id.userId);
         password = findViewById(R.id.password);
         login = findViewById(R.id.login);
+//        Bundle extras = getIntent().getExtras();
+//        user = extras.getString("hash_User");
+//        pass = extras.getString("hash_Pass");
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userIdText = userId.getText().toString();
-                String passwordText = password.getText().toString();
+                userIdText = userId.getText().toString();
+                passwordText = password.getText().toString();
+
                 if (userIdText.isEmpty() || passwordText.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
                 }else {
                     //Perform Query
                     TaskRoomDatabase userDatabase = TaskRoomDatabase.getDatabase(getApplicationContext());
-                    UserDao userDao = userDatabase.userDao();
+                    final UserDao userDao = userDatabase.userDao();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            UserEntity userEntity = userDao.login(userIdText, passwordText);
-                            if (userEntity == null) {
+                            UserEntity userDB = userDao.loginuser();
+                            UserEntity passDB = userDao.loginpass();
+                            String struserDB = userDB.getUserId();
+                            String strpassDB = passDB.getPassword();
+                            UserEntity userEntity = new UserEntity();
+                            userDao.registerUser(userEntity);
+                            BCrypt.Result resultUser = BCrypt.verifyer().verify(userIdText.toCharArray(), struserDB);
+                            BCrypt.Result resultPass = BCrypt.verifyer().verify(passwordText.toCharArray(), strpassDB);
+                            if (!resultUser.verified && !resultPass.verified) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -49,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 });
                             }else {
-                                String name = userEntity.name;
+                                String name = "userDB.name";
                                 startActivity(new Intent(
                                         LoginActivity.this,MainActivity.class)
                                         .putExtra("name", name));
