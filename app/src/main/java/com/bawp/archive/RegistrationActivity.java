@@ -35,8 +35,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 // Creating User Entity
                 UserEntity userEntity = new UserEntity();
                 userEntity.setUserId(userId.getText().toString());
-                userEntity.setUserId(password.getText().toString());
-                userEntity.setUserId(name.getText().toString());
+                userEntity.setPassword(password.getText().toString());
+                userEntity.setName(name.getText().toString());
                 System.out.println(userEntity);
                 if (validateInput(userEntity)){
                     //Do insert operation
@@ -53,7 +53,6 @@ public class RegistrationActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(),"User Registered", Toast.LENGTH_SHORT).show();
                                 }
                             });
-
                         }
                     }).start();
                 }else{
