@@ -11,11 +11,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.bawp.archive.data.TaskDao;
 import com.bawp.archive.model.Task;
+import com.bawp.archive.roomdatabase.UserDao;
+import com.bawp.archive.roomdatabase.UserEntity;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Task.class}, version = 1, exportSchema = false)
+@Database(entities = {UserEntity.class, Task.class}, version = 1, exportSchema = false)
 @TypeConverters({Converter.class})
 public abstract class TaskRoomDatabase extends RoomDatabase {
     public static final int NUMBER_OF_THREADS = 4;
@@ -32,7 +34,9 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
                     databaseWriterExecutor.execute(() ->{
                         // invoke Dao, and write
                         TaskDao taskDao = INSTANCE.taskDao();
-                        taskDao.deleteAll(); //clean slate!
+                        taskDao.deleteAll();
+                        UserDao userDao = INSTANCE.userDao();
+                        //clean slate!
 
                         // writing to our table
                     });
@@ -53,4 +57,6 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
     public abstract TaskDao taskDao();
+
+    public abstract UserDao userDao();
 }

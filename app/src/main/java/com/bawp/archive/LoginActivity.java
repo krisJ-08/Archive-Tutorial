@@ -10,8 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bawp.archive.roomdatabase.UserDao;
-import com.bawp.archive.roomdatabase.UserDatabase;
 import com.bawp.archive.roomdatabase.UserEntity;
+import com.bawp.archive.util.TaskRoomDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
                 }else {
                     //Perform Query
-                    UserDatabase userDatabase = UserDatabase.getUserDatabase(getApplicationContext());
+                    TaskRoomDatabase userDatabase = TaskRoomDatabase.getDatabase(getApplicationContext());
                     UserDao userDao = userDatabase.userDao();
                     new Thread(new Runnable() {
                         @Override
@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                             }else {
                                 String name = userEntity.name;
                                 startActivity(new Intent(
-                                        LoginActivity.this,HomeScreen.class)
+                                        LoginActivity.this,MainActivity.class)
                                         .putExtra("name", name));
                             }
                         }

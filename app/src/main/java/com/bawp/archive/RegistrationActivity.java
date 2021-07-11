@@ -10,8 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bawp.archive.roomdatabase.UserDao;
-import com.bawp.archive.roomdatabase.UserDatabase;
 import com.bawp.archive.roomdatabase.UserEntity;
+import com.bawp.archive.util.TaskRoomDatabase;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -37,9 +37,10 @@ public class RegistrationActivity extends AppCompatActivity {
                 userEntity.setUserId(userId.getText().toString());
                 userEntity.setUserId(password.getText().toString());
                 userEntity.setUserId(name.getText().toString());
+                System.out.println(userEntity);
                 if (validateInput(userEntity)){
                     //Do insert operation
-                    UserDatabase userDatabase = UserDatabase.getUserDatabase(getApplicationContext());
+                    TaskRoomDatabase userDatabase = TaskRoomDatabase.getDatabase(getApplicationContext());
                     final UserDao userDao = userDatabase.userDao();
                     new Thread(new Runnable() {
                         @Override
@@ -72,11 +73,12 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private Boolean validateInput(UserEntity userEntity){
-        if (userEntity.getName().isEmpty() ||
+        if (userEntity.getUserId().isEmpty() ||
             userEntity.getPassword().isEmpty()||
             userEntity.getName().isEmpty()){
             return false;
+        }else {
+            return true;
         }
-        return true;
     }
 }
