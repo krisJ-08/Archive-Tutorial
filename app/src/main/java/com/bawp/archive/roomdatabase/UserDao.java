@@ -16,7 +16,4 @@ public interface UserDao {
     @Query("SELECT password from user")
     UserEntity loginpass ();
 
-    @Query("SELECT * from user where id = (1)")
-    UserEntity loginid();
-
 }

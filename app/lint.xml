@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="MissingDefaultResource">
+        <ignore path="src/main/res/drawable-night-mdpi/logo_banner.png" />
+        <ignore path="src/main/res/drawable-notnight-mdpi/logo_banner.png" />
+    </issue>
+</lint>

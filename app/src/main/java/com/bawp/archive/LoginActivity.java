@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.bawp.archive.roomdatabase.UserDao;
 import com.bawp.archive.roomdatabase.UserEntity;
 import com.bawp.archive.util.TaskRoomDatabase;
-import com.bawp.archive.RegistrationActivity;
+
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
@@ -23,8 +23,6 @@ public class LoginActivity extends AppCompatActivity {
     Button login;
     private String userIdText;
     private String passwordText;
-    private String pass = null;
-    private String user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +31,6 @@ public class LoginActivity extends AppCompatActivity {
         userId = findViewById(R.id.userId);
         password = findViewById(R.id.password);
         login = findViewById(R.id.login);
-//        Bundle extras = getIntent().getExtras();
-//        user = extras.getString("hash_User");
-//        pass = extras.getString("hash_Pass");
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,8 +51,6 @@ public class LoginActivity extends AppCompatActivity {
                             UserEntity passDB = userDao.loginpass();
                             String struserDB = userDB.getUserId();
                             String strpassDB = passDB.getPassword();
-                            UserEntity userEntity = new UserEntity();
-                            userDao.registerUser(userEntity);
                             BCrypt.Result resultUser = BCrypt.verifyer().verify(userIdText.toCharArray(), struserDB);
                             BCrypt.Result resultPass = BCrypt.verifyer().verify(passwordText.toCharArray(), strpassDB);
                             if (!resultUser.verified && !resultPass.verified) {

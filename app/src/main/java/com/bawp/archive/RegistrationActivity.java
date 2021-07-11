@@ -85,12 +85,8 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private Boolean validateInput(UserEntity userEntity){
-        if (userEntity.getUserId().isEmpty() ||
-            userEntity.getPassword().isEmpty()||
-            userEntity.getName().isEmpty()){
-            return false;
-        }else {
-            return true;
-        }
+        return !userEntity.getUserId().isEmpty() &&
+                !userEntity.getPassword().isEmpty() &&
+                !userEntity.getName().isEmpty();
     }
 }

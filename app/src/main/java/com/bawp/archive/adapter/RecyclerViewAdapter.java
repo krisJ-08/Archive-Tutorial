@@ -29,10 +29,10 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> implements Filterable{
     private static List<Task> taskList;
     private final OnTodoClickListener todoClickListener;
-    private List<Task> tasklistfull;
+    private final List<Task> tasklistfull;
 
     public RecyclerViewAdapter(List<Task> taskList, OnTodoClickListener onTodoClickListener) {
-        this.taskList = taskList;
+        RecyclerViewAdapter.taskList = taskList;
         this.todoClickListener = onTodoClickListener;
         this.tasklistfull = new ArrayList<>(taskList);
     }
@@ -79,7 +79,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return myFilter;
     }
 
-    private Filter myFilter = new Filter() {
+    private final Filter myFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Task> filteredList = new ArrayList<>();
