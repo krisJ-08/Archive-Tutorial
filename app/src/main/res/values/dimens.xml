@@ -11,5 +11,8 @@
     <dimen name="top_margin">6dp</dimen>
     <dimen name="recycler_padding">16dp</dimen>
     <dimen name="radio_padding">6dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
 
 </resources>
