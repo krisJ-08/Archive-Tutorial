@@ -24,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private String userIdText;
     private String passwordText;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         userId = findViewById(R.id.userId);
         password = findViewById(R.id.password);
         login = findViewById(R.id.login);
+        getSupportActionBar().hide();
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override

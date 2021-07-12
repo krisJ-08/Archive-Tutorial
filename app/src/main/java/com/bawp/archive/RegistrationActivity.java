@@ -34,12 +34,14 @@ public class RegistrationActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         register = findViewById(R.id.register);
         login = findViewById(R.id.login);
+        getSupportActionBar().hide();
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Creating User Entity
                 UserEntity userEntity = new UserEntity();
+
                 String hashUser = userId.getText().toString();
                 String hashPass = password.getText().toString();
                 String hashName = name.getText().toString();
@@ -59,13 +61,23 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             //Register User
+                            UserEntity checkUser = userDao.loginuser();
+                            UserEntity checkPass = userDao.loginpass();
+                            if(checkPass == null  && checkUser == null){
                             userDao.registerUser(userEntity);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     Toast.makeText(getApplicationContext(),"User Registered", Toast.LENGTH_SHORT).show();
                                 }
-                            });
+                            });}else{
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getApplicationContext(),"User Already Registered", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                         }
                     }).start();
                 }else{
